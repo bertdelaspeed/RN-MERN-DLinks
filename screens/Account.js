@@ -41,33 +41,23 @@ const Account = ({ navigation }) => {
       setImage(image);
     }
   }, []);
+
   const handleSubmit = async () => {
+    console.log("password before sending : ", password);
     setLoading(true);
-    if (!email || !password) {
-      alert("All fields are required");
-      setLoading(false);
-      return;
-    }
-    console.log("attempt : " + email + " " + password);
+    //api request
     try {
-      const { data } = await axios.post(`/Account`, {
-        email,
-        password,
-      });
+      const { data } = await axios.post("/update-password", { password });
       if (data.error) {
         alert(data.error);
         setLoading(false);
       } else {
-        // save in context
-        setState(data);
-        // save response in async storage
-        await AsyncStorage.setItem("@auth", JSON.stringify(data));
-        console.log("sign in success", data);
+        alert("Password updated 👍");
+        setPassword("");
         setLoading(false);
-        navigation.navigate("Home");
       }
     } catch (error) {
-      alert("Sign in failed");
+      alert("Password update failed");
       console.log(error);
       setLoading(false);
     }
@@ -168,7 +158,7 @@ const Account = ({ navigation }) => {
             autoCompleteType="password"
           />
           <SubmitButton
-            title="Update Password !"
+            title="Update Password "
             handleSubmit={handleSubmit}
             loading={Loading}
           />
